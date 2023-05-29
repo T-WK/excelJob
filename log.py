@@ -12,33 +12,36 @@ class Log :
     __f = None
     __fileName = ''
 
-    def _checkFile(self) -> bool:
-        self.__fileName = dt.datetime.now().strftime("%Y%m%d") + '.txt'
-        self.__fileName = os.path.join(self.__logDir, self.__fileName)
+    def __init__(self, logTxt) -> None:
+        self.__openLogFile()
+        self.__f.write(logTxt + '\n')
+        self.__closeFile()
 
-        if os.path.isfile(self.__fileName):
+    def __checkFile(self) -> bool:
+        Log.__fileName = dt.datetime.now().strftime("%Y%m%d") + '.txt'
+        Log.__fileName = os.path.join(Log.__logDir, Log.__fileName)
+
+        if os.path.isfile(Log.__fileName):
             return True
         
         return False
 
-    def _openLogFile(self):
-        if not self.__f.closed():
-            self.__f.close()
+    def __openLogFile(self):
+        if Log.__f is not None and not Log.__f.closed():
+            Log.__f.close()
 
 
-        if self.checkFile():
-            self.__f = open(self.__fileName, 'a')
+        if self.__checkFile():
+            Log.__f = open(Log.__fileName, 'a')
         
         else:
-            self.__f = open(self.__fileName, 'w')
+            Log.__f = open(Log.__fileName, 'w')
+    
+    def __closeFile(self):
+        if Log.__f is not None and not Log.__f.closed:
+            Log.__f.close()
 
-    def _closeFile(self):
-        if not self.__f.closed():
-            self.__f.close()
-
-    def _writeLog(self, logTxt):
-        self.openLogFile()
-        self.__f.write(logTxt + '\n')
-        self.closeFile()
-
-        
+    @classmethod
+    def _writeLog(cls, logTxt):
+        now = dt.datetime.now().strftime('[%H:%m:%S] - ')
+        cls(now + logTxt)
