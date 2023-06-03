@@ -9,39 +9,33 @@ import datetime as dt
 
 class Log :
     __logDir = 'log'
-    __f = None
-    __fileName = ''
 
-    def __init__(self, logTxt) -> None:
-        self.__openLogFile()
-        self.__f.write(logTxt + '\n')
-        self.__closeFile()
-
-    def __checkFile(self) -> bool:
-        Log.__fileName = dt.datetime.now().strftime("%Y%m%d") + '.txt'
-        Log.__fileName = os.path.join(Log.__logDir, Log.__fileName)
-
-        if os.path.isfile(Log.__fileName):
+    def __getFileName() -> str:
+        fileName = dt.datetime.now().strftime("%Y%m%d") + '.txt'
+        fileName = os.path.join(Log.__logDir, fileName)
+        return fileName
+    
+    def __checkFile(fileName) -> bool:
+        if os.path.isfile(fileName):
             return True
         
         return False
-
-    def __openLogFile(self):
-        if Log.__f is not None and not Log.__f.closed():
-            Log.__f.close()
-
-
-        if self.__checkFile():
-            Log.__f = open(Log.__fileName, 'a')
-        
-        else:
-            Log.__f = open(Log.__fileName, 'w')
     
-    def __closeFile(self):
-        if Log.__f is not None and not Log.__f.closed:
-            Log.__f.close()
+    def __checkDir():
+        if not os.path.isdir(Log.__logDir):
+            os.mkdir(Log.__logDir)
 
-    @classmethod
-    def _writeLog(cls, logTxt):
+    @staticmethod
+    def writeLog(logTxt):
         now = dt.datetime.now().strftime('[%H:%m:%S] - ')
-        cls(now + logTxt)
+        txt = now + logTxt
+
+        fileName = Log.__getFileName()
+        Log.__checkDir()
+
+        openType = 'w'
+        if Log.__checkFile(fileName=fileName):
+            openType = 'a'
+
+        with open(fileName, openType) as f:
+            f.write(txt)
