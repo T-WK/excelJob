@@ -26,9 +26,10 @@ class Log :
             os.mkdir(Log.__logDir)
 
     @staticmethod
-    def writeLog(logTxt):
-        now = dt.datetime.now().strftime('[%H:%m:%S] - ')
-        txt = now + logTxt
+    def writeLog(logTxt, path):
+        path = os.path.basename(path)
+        now = dt.datetime.now().strftime('[%H:%m:%S] - ' + path + ': ')
+        txt = now + logTxt + '\n'
 
         fileName = Log.__getFileName()
         Log.__checkDir()
