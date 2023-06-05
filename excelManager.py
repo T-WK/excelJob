@@ -2,7 +2,6 @@
 엑셀 관련 기능 클래스
 '''
 import pandas as pd
-import openpyxl
 import os.path
 import datetime as dt
 from log import Log
