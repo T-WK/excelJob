@@ -44,7 +44,7 @@ class Config:
             path = self.getDefaultConfig()['downloadPath']
 
         if not os.path.isdir(path):
-            Log.writeLog('경로 생성 path=%'%path, __file__)
+            Log.writeLog('경로 생성 path=%s'%path, __file__)
             os.makedirs(path)
         
         return path
