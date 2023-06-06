@@ -35,8 +35,7 @@ def main():
             
             if len(line.split(SPLIT_STR)) == 2:
                 option, val = map(refine, line.split(SPLIT_STR))
-                data[option] = om
-            .getRightPath(val)
+                data[option] = om.getRightPath(val)
             
             else:
                 option = list(map(refine, line.split(SPLIT_STR)))[0]
