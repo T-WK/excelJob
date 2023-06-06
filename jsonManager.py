@@ -4,7 +4,7 @@ class JsonManager:
 
     @staticmethod
     def readJson():
-        with open(JsonManager.__config, 'r') as f:
+        with open(JsonManager.__config, 'rt', encoding='utf8') as f:
             data = json.load(f)
         
         return data
