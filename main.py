@@ -1,9 +1,8 @@
 from excelManager import ExcelManager
 from log import Log
+import openManager as om
+from define import *
 
-SETTING_FILE = '실행.txt'
-COMBINE_MODE = 1
-EXTRACTION_MODE = 2
 
 
 def combineString(strArg):
@@ -15,40 +14,40 @@ def combineString(strArg):
 
 def refine(val):
     if '"' in val:
-        val = combineString(list(map(str, val.split('"'))))
+        val = val.replace('"','')
 
     if "'" in val:
-        val = combineString(list(map(str, val.split("'"))))
+        val = val.replace("'",'')
 
-    if '\\' in val:
-        val.replace('\\', '/')
-    
-    return val
+    return val.strip()
 
 def main():
     data = dict()
     ex = ExcelManager()
 
-    with open(SETTING_FILE, 'r') as f:
+    Log.writeLog('json 읽기 시작.', __file__)
+    with open(SETTING_FILE, 'r', encoding=ENCODING) as f:
         for line in f.readlines():
             line = line.strip()
 
             if '#' in line or '' == line:
                 continue
             
-            if len(line.split(':')) == 2:
-                option, val = map(refine, line.split(':'))
-                data[option] = val
+            if len(line.split(SPLIT_STR)) == 2:
+                option, val = map(refine, line.split(SPLIT_STR))
+                data[option] = om
+            .getRightPath(val)
             
             else:
-                option = list(map(refine, line.split(':')))[0]
+                option = list(map(refine, line.split(SPLIT_STR)))[0]
                 data[option] = ''
-
+        
+    Log.writeLog('실행.txt 읽기 종료.', __file__)
     if 'mode' not in data.keys():
         Log.writeLog('프로그램 모드가 존재하지 않습니다.', __file__)
         return
 
-    if int(data['mode']) == 1:
+    if data['mode'] == '1':
         if 'path2' not in data.keys():
             Log.writeLog('병합할 송장 파일이 없습니다.', __file__)
             return
@@ -59,7 +58,7 @@ def main():
             return
         ex.combineExcels(data['path1'], data['sheet1'], data['path2'], data['sheet2'])
 
-    elif int(data['mode']) == 2:
+    elif data['mode'] == '2':
         options = set(['mode', 'path1', 'sheet1'])
         if options & set(data.keys()) != options:
             Log.writeLog('프로그램을 실행하기위한 옵션값이 부족하거나 옵션명이 올바르지 못합니다.', __file__)
@@ -69,5 +68,7 @@ def main():
 
 
 if __name__ == '__main__':
+    Log.writeLog('프로그램 실행----------------------------',__file__)
     main()
+    Log.writeLog('프로그램 종료----------------------------',__file__)
             
