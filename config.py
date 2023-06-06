@@ -38,18 +38,18 @@ class Config:
 
 
     def getDownloadPath(self):
-        path = self.getDefaultConfig()['downloadPath']
-        if path != "" and not os.path.isdir(path):
-            Log.writeLog('커스텀 다운로드경로 잘못됨 path = %s' % path, __file__)
-            path = self.defaultConfig['downloadPath']
-        else:
-            return path
+        path = self.getCustomConfig()['downloadPath']
+        if path == '':
+            Log.writeLog('커스텀 경로 없음',__file__)
+            path = self.getDefaultConfig()['downloadPath']
+
+        if not os.path.isdir(path):
+            Log.writeLog('경로 생성 path=%'%path, __file__)
+            os.makedirs(path)
         
-        if path != "" and not os.path.isdir(path):
-            Log.writeLog('디폴트 다운로드경로 잘못됨 path = %s' % path, __file__)
-            return None
-        else:
-            return path
+        return path
+        
+
     
     def getBlackList(self):
         if "blackList" in self.customConfig:
