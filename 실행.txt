@@ -4,22 +4,22 @@
 # 실행 모드 1 또는 2 숫자 입력
 # 1: 발주서랑 송장합치는 모드
 # 2: 발주서에서 저장된 블랙리스트 뽑는 모드
-mode:1
+mode=
 
 
 # 엑셀파일 경로 path1, path2
 # 데이터가 들어가있는 sheet 이름
-# 예시: C:\발주서폴더\발주서.xlsx
+# 예시: path=C:\\발주서폴더\발주서.xlsx
 
 # path1: 발주서 엑셀파일의 경로
-path1:/Users/tw-k/Desktop/0530테스트발주서.xlsx
+path1=
 
 # 발주서 시트 이름
-sheet1:시트 1
+sheet1=
 
 
 # path2: 송장 엑셀파일의 경로 (모드가 1인경우에만 작성함 )
-path2:/Users/tw-k/Desktop/0530테스트발주서.xlsx
+path2=
 
 # 송장 시트 이름
-sheet2:시트 2
+sheet2=
