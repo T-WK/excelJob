@@ -5,6 +5,7 @@
 
 import os.path
 import datetime as dt
+from define import *
 
 
 class Log :
@@ -38,5 +39,5 @@ class Log :
         if Log.__checkFile(fileName=fileName):
             openType = 'a'
 
-        with open(fileName, openType) as f:
+        with open(fileName, openType, encoding=ENCODING) as f:
             f.write(txt)
