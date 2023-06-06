@@ -6,6 +6,7 @@ import os.path
 import datetime as dt
 from log import Log
 from config import Config
+from define import *
 
 
 class ExcelManager :
@@ -53,6 +54,7 @@ class ExcelManager :
 
     # 엑셀파일 작업
     def combineExcels(self, orderExcelName='', orderSheet=0, invoiceExcelName='', invoiceSheet=0):
+        Log.writeLog('combineExcels 시작', __file__)
         invoiceDf = self.readExcelFile(invoiceExcelName, invoiceSheet) # 송장 엑셀
         orderDf = self.readExcelFile(orderExcelName, orderSheet) # 발주서 엑셀
 
@@ -90,15 +92,16 @@ class ExcelManager :
             
 
             if '송장번호' not in orderDf.columns.values.tolist():
-                print('송장번호 넣음')
                 orderDf['송장번호'] = pd.Series()
             # 송장 추가
             orderDf.loc[idx[0], '송장번호'] = invoiceDf.loc[i, '송장번호']
 
-        self.createNewExcelFile(orderDf, '병합된엑셀')
+        self.createNewExcelFile(orderDf, 'combindedExcel')
     
     def getBlackLisOrder(self, orderExcel, sheetName):
+        Log.writeLog('getBlackLisOrder 시작', __file__)
         if self.__blackList == []:
+            Log.writeLog('블랙리스트 목록이 비어있음', __file__)
             return
 
         orderDf = self.readExcelFile(orderExcel, sheetName)
