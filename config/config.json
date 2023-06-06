@@ -4,6 +4,7 @@
             "downloadPath": "newExcelFile"
         },
         "custom": {
+            "downloadPath": "newExcelFile",
             "blackList": [
                 {
                     "name": "고길동",
@@ -20,9 +21,10 @@
     },
     "Windows": {
         "default":{
-            "downloadPath": "%HOMEPATH%/다운로드"
+            "downloadPath": "newExcelFile"
         },
         "custom": {
+            "downloadPath": "newExcelFile",
             "blackList": [
                 
             ]
