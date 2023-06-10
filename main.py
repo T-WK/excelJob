@@ -46,6 +46,9 @@ def main():
         Log.writeLog('프로그램 모드가 존재하지 않습니다.', __file__)
         return
 
+    data['sheet1'] = 0 if data['sheet1'] == '0' else data['sheet1']
+    data['sheet2'] = 0 if data['sheet2'] == '0' else data['sheet2']
+
     if data['mode'] == '1':
         if 'path2' not in data.keys():
             Log.writeLog('병합할 송장 파일이 없습니다.', __file__)
@@ -67,7 +70,7 @@ def main():
 
 
 if __name__ == '__main__':
-    Log.writeLog('프로그램 실행----------------------------',__file__)
+    Log.writeLog('프로그램 실행----------------------------',__file__, 'w')
     main()
     Log.writeLog('프로그램 종료----------------------------',__file__)
             

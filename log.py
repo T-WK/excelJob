@@ -27,7 +27,7 @@ class Log :
             os.mkdir(Log.__logDir)
 
     @staticmethod
-    def writeLog(logTxt, path):
+    def writeLog(logTxt, path, openType='a'):
         path = os.path.basename(path)
         now = dt.datetime.now().strftime('[%H:%m:%S] - ' + path + ': ')
         txt = now + logTxt + '\n'
@@ -35,9 +35,6 @@ class Log :
         fileName = Log.__getFileName()
         Log.__checkDir()
 
-        openType = 'w'
-        if Log.__checkFile(fileName=fileName):
-            openType = 'a'
 
         with open(fileName, openType, encoding=ENCODING) as f:
             f.write(txt)
