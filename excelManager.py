@@ -27,7 +27,7 @@ class ExcelManager :
             return None
         
         return pd.read_excel(fileName, 
-                             header=1,
+                             header=0,
                              sheet_name=sheetName,
                              engine='openpyxl')
     # -
@@ -63,12 +63,13 @@ class ExcelManager :
             return
         
         # 수하인명 and 수하인주소 and (수하인전화번호1 or 수하인전화번호2)
+        print(invoiceDf.head)
         for i in range(len(invoiceDf)):
             # 조건에 맞는 행 인덱스 찾음
             name = invoiceDf.loc[i, '수하인명']
             address = invoiceDf.loc[i, '수하인주소']
-            phone1 = invoiceDf.loc[i, '수하인전화번호1']
-            phone2 = invoiceDf.loc[i, '수하인전화번호2']
+            phone1 = invoiceDf.loc[i, '수하인 전화번호 1']
+            phone2 = invoiceDf.loc[i, '수하인 전화번호 2']
 
             idx = None
             errorMsg = ''
@@ -77,17 +78,17 @@ class ExcelManager :
                 &
                 (orderDf['수하인주소'] == address)
                 &
-                (orderDf['수하인전화번호1'] == phone1)
+                (orderDf['수하인 전화번호 1'] == phone1)
                 | 
-                (orderDf['수하인전화번호2'] == phone2)
+                (orderDf['수하인 전화번호 2'] == phone2)
             ].tolist()
 
             if len(idx) == 0:
-                Log.writeLog('"%,%,%,%"를 찾지 못했습니다.'%(name,address,phone1,phone2), __file__)
+                Log.writeLog('"%s,%s,%s,%s"를 찾지 못했습니다.'%(name,address,phone1,phone2), __file__)
                 continue
 
             elif len(idx) != 1:
-                Log.writeLog("{idx}의 행들의 수하인이 겹칩니다.\n", __file__)
+                Log.writeLog("[%s]의 행들의 수하인이 겹칩니다.\n"%(', '.join(map(str, idx))), __file__)
                 continue
             
 
@@ -116,9 +117,9 @@ class ExcelManager :
                 &
                 (orderDf['수하인주소'] == address)
                 &
-                (orderDf['수하인전화번호1'] == phone)
+                (orderDf['수하인 전화번호 1'] == phone)
                 | 
-                (orderDf['수하인전화번호2'] == phone)
+                (orderDf['수하인 전화번호 2'] == phone)
             ].tolist()
             
             indexArr += idx
