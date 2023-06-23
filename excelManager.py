@@ -63,7 +63,6 @@ class ExcelManager :
             return
         
         # 수하인명 and 수하인주소 and (수하인전화번호1 or 수하인전화번호2)
-        print(invoiceDf.head)
         for i in range(len(invoiceDf)):
             # 조건에 맞는 행 인덱스 찾음
             name = invoiceDf.loc[i, '수하인명']
