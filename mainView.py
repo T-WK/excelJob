@@ -3,6 +3,7 @@ from tkinter import filedialog
 import os.path
 from define import *
 from mainAction import MainAction
+from log import Log
 
 
 orderPath = ''
@@ -25,8 +26,10 @@ def browseFiles(num):
         MainAction.setInvoicePath(filename)
 
 def combineExcel():
+    Log.writeLog('프로그램 실행----------------------------',__file__, 'w')
     getSheetName()
     MainAction.runMode(ORDER_MODE)
+    Log.writeLog('프로그램 종료----------------------------',__file__)
 
 def addBlackList():
     pass
