@@ -70,24 +70,28 @@ class ExcelManager :
             phone1 = invoiceDf.loc[i, '수하인 전화번호 1']
             phone2 = invoiceDf.loc[i, '수하인 전화번호 2']
 
+            nameBSr = orderDf['수하인명'] == invoiceDf.loc[i, '수하인명']
+            addressBSr = orderDf['수하인주소'] == invoiceDf.loc[i, '수하인주소']
+            phone1BSr = orderDf['수하인 전화번호 1'] == invoiceDf.loc[i, '수하인 전화번호 1']
+            phone2BSr = orderDf['수하인 전화번호 2'] == invoiceDf.loc[i, '수하인 전화번호 2']
+
             idx = None
             errorMsg = ''
-            idx = orderDf.index[
-                (orderDf['수하인명'] == name)
-                &
-                (orderDf['수하인주소'] == address)
-                &
-                (orderDf['수하인 전화번호 1'] == phone1)
-                | 
-                (orderDf['수하인 전화번호 2'] == phone2)
-            ].tolist()
+            idx = orderDf[nameBSr & addressBSr & phone1BSr & phone2BSr].index
 
             if len(idx) == 0:
-                Log.writeLog('"%s,%s,%s,%s"를 찾지 못했습니다.'%(name,address,phone1,phone2), __file__)
+                # TODO: Tlqkf 엑셀상엔 존재한느데 없다함
+                Log.writeLog('%d"%s,%s,%s,%s"를 찾지 못했습니다.'%(i,name,address,phone1,phone2), __file__)
                 continue
 
             elif len(idx) != 1:
-                Log.writeLog("[%s]의 행들의 수하인이 겹칩니다.\n"%(', '.join(map(str, idx))), __file__)
+                Log.writeLog("송장의 %d번째 행과 발주서의 [%s] 행들의 수하인이 겹칩니다.\n"%(i, ', '.join(map(str, idx))), __file__)
+                Log.writeLog('송장 %d번 행 "%s,%s,%s,%s"'%(i, name,address,phone1,phone2), __file__)
+                for j in idx:
+                    Log.writeLog('발주서 %d번 행 "%s,%s,%s,%s"'%(
+                        j, invoiceDf.loc[i, '수하인명'], invoiceDf.loc[i, '수하인주소'],
+                        invoiceDf.loc[i, '수하인 전화번호 1'], invoiceDf.loc[i, '수하인 전화번호 2']), __file__)
+
                 continue
             
 
