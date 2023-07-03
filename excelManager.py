@@ -29,7 +29,8 @@ class ExcelManager :
         return pd.read_excel(fileName, 
                              header=0,
                              sheet_name=sheetName,
-                             engine='openpyxl')
+                             engine='openpyxl').fillna('-')
+        
     # -
 
     # 엑셀파일 생성 관련 -
@@ -101,7 +102,99 @@ class ExcelManager :
             orderDf.loc[idx[0], '송장번호'] = invoiceDf.loc[i, '송장번호']
 
         self.createNewExcelFile(orderDf, 'combindedExcel')
+
+    def makeExcel(self, orderExcelName='', orderSheet=0):
+        Log.writeLog('makeExcels 시작', __file__)
+        orderDf = self.readExcelFile(orderExcelName, orderSheet) # 발주서 엑셀
+
+        newDF = pd.DataFrame(columns=self.makeColumnList())
+        doneIndex = []
+
+        if orderDf is None :
+            Log.writeLog('발주서DF:%d'%(orderDf==None), __file__)
+            return
+        
+        # 수하인명 and 수하인주소 and (수하인전화번호1 or 수하인전화번호2)
+        for i in range(len(orderDf)):
+            # 조건에 맞는 행 인덱스 찾음
+            name = orderDf.loc[i, COLUMN_VALUES['NAME']]
+            address = orderDf.loc[i, COLUMN_VALUES['ADDRESS']]
+            phone1 = orderDf.loc[i, COLUMN_VALUES['PHONE1']]
+            phone2 = orderDf.loc[i, COLUMN_VALUES['PHONE2']]
+
+            nameBSr = orderDf[COLUMN_VALUES['NAME']] == orderDf.loc[i, COLUMN_VALUES['NAME']]
+            addressBSr = orderDf[COLUMN_VALUES['ADDRESS']] == orderDf.loc[i, COLUMN_VALUES['ADDRESS']]
+            phone1BSr = orderDf[COLUMN_VALUES['PHONE1']] == orderDf.loc[i, COLUMN_VALUES['PHONE1']]
+            phone2BSr = orderDf[COLUMN_VALUES['PHONE2']] == orderDf.loc[i, COLUMN_VALUES['PHONE2']]
+
+            idx = None
+            errorMsg = ''
+            idx = orderDf[nameBSr & addressBSr & phone1BSr & phone2BSr].index.tolist()
+
+            if len(idx) == 0:
+                Log.writeLog('%d"%s,%s,%s,%s"를 찾지 못했습니다.'%(i,name,address,phone1,phone2), __file__)
+                continue
+
+            elif len(idx) > 0:
+                if (idx[0] in doneIndex): continue
+
+                newRowDict = self.makeRowToDict()
+                orderNum = ''
+                for j in idx:
+                    # 값 저장해둠
+                    newRowDict = self.setValueTODict(newRowDict, orderDf.loc[j])
+
+
+                    # 주문번호 최소값으로 찾음
+                    if orderNum == '':
+                        orderNum = orderDf.loc[j, '주문번호']
+                    else:
+                        orderNum = min(int(orderDf.loc[j, '주문번호']), int(orderNum))
+            
+                doneIndex += idx
+
+                newDF = pd.concat([newDF, pd.DataFrame(newRowDict)]).reset_index(drop=True)
+
+        self.createNewExcelFile(newDF, 'combindedExcel')
     
+    def makeRowToDict(self):
+        newDict = dict()
+        for key, value in COLUMN_VALUES.items():
+            newDict[value] = ['-']
+
+        return newDict
+
+    def setValueTODict(self, dic, df):
+        if dic[COLUMN_VALUES['NAME']] == ['-']:
+            dic[COLUMN_VALUES['NAME']] = [str(df[COLUMN_VALUES['NAME']])]
+            dic[COLUMN_VALUES['BLANK']] = [str(df[COLUMN_VALUES['BLANK']])]
+            dic[COLUMN_VALUES['ADDRESS']] = [str(df[COLUMN_VALUES['ADDRESS']])]
+            dic[COLUMN_VALUES['PHONE1']] = [str(df[COLUMN_VALUES['PHONE1']])]
+            dic[COLUMN_VALUES['PHONE2']] = [str(df[COLUMN_VALUES['PHONE2']])]
+            dic[COLUMN_VALUES['COUNT']] = ['1']
+            dic[COLUMN_VALUES['ITEM']] = [str(df[COLUMN_VALUES['ITEM']])]
+            dic[COLUMN_VALUES['OPTION1']] = [str(df[COLUMN_VALUES['OPTION1']])]
+            dic[COLUMN_VALUES['OPTION2']] = [str(df[COLUMN_VALUES['OPTION2']])]
+            dic[COLUMN_VALUES['DELIVERY_MSG']] = [str(df[COLUMN_VALUES['DELIVERY_MSG']])]
+            dic[COLUMN_VALUES['MALL']] = [str(df[COLUMN_VALUES['MALL']])]
+            dic[COLUMN_VALUES['ORDER_NUM']] = [str(df[COLUMN_VALUES['ORDER_NUM']])]
+        
+        else:
+            dic[COLUMN_VALUES['ITEM']][0] += '\n' + str(df[COLUMN_VALUES['ITEM']])
+            dic[COLUMN_VALUES['OPTION1']][0] += '\n' + str(df[COLUMN_VALUES['OPTION1']])
+            dic[COLUMN_VALUES['OPTION2']][0] += '\n' + str(df[COLUMN_VALUES['OPTION2']])
+            
+            dic[COLUMN_VALUES['ORDER_NUM']] = [str(min(int(dic[COLUMN_VALUES['ORDER_NUM']][0]), int(df[COLUMN_VALUES['ORDER_NUM']])))]
+
+        return dic
+
+    def makeColumnList(self):
+        newList = []
+        for key, value in COLUMN_VALUES.items():
+            newList.append(value)
+
+        return newList
+
     def getBlackLisOrder(self, orderExcel, sheetName):
         Log.writeLog('getBlackLisOrder 시작', __file__)
         if self.__blackList == []:
