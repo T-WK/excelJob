@@ -28,22 +28,25 @@ class MainAction:
         if MainAction.__orderPath == '' or MainAction.__orderSheet == '':
             return False
         
-        if mode == ORDER_MODE:
+        if mode == EXTRACTION_MODE or mode == MAKE_MODE:
             return True
         
         if MainAction.__invoicePath == '' or MainAction.__invoiceSheet == '':
             return False
         
-        if mode == INVOICE_MODE:
+        if mode == COMBINE_MODE:
             return True
 
 
     def runMode(mode):
-        if mode == ORDER_MODE and MainAction.checkConfig(mode):
+        if mode == COMBINE_MODE and MainAction.checkConfig(mode):
             MainAction.runCompare()
 
-        elif mode == INVOICE_MODE and MainAction.checkConfig(mode):
+        elif mode == EXTRACTION_MODE and MainAction.checkConfig(mode):
             MainAction.runBlackList()
+
+        elif mode == MAKE_MODE and MainAction.checkConfig(mode):
+            MainAction.runMake()
 
     def runCompare():
         ex = ExcelManager()
@@ -57,4 +60,10 @@ class MainAction:
         ex = ExcelManager()
         ex.getBlackLisOrder(
             MainAction.__orderPath, 
-            MainAction.__orderSheet,)
+            MainAction.__orderSheet)
+
+    def runMake():
+        ex = ExcelManager()
+        ex.makeExcel(
+            MainAction.__orderPath,
+            MainAction.__orderSheet)
