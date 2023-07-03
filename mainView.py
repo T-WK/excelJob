@@ -28,7 +28,13 @@ def browseFiles(num):
 def combineExcel():
     Log.writeLog('프로그램 실행----------------------------',__file__, 'w')
     getSheetName()
-    MainAction.runMode(ORDER_MODE)
+    MainAction.runMode(COMBINE_MODE)
+    Log.writeLog('프로그램 종료----------------------------',__file__)
+
+def makeExcel():
+    Log.writeLog('프로그램 실행----------------------------',__file__, 'w')
+    getSheetName()
+    MainAction.runMode(MAKE_MODE)
     Log.writeLog('프로그램 종료----------------------------',__file__)
 
 def addBlackList():
@@ -53,6 +59,9 @@ mainView.title("엑셀 작업")
 mainView.geometry(VIEW_SIZE)
 mainView.config(background="white")
 mainView.resizable(True, True)
+versionLabel = Label(mainView, text=VERSION, fg="black")
+versionLabel.place(x=440, y=160)
+versionLabel.config(background="white")
 
 # 발주서 UI부분
 orderELabel = Label(mainView, text="발주서 엑셀", fg="black")
@@ -85,9 +94,11 @@ invoicSEntry.grid(row=3, column=1)
 # 기능 버튼
 # setBlackList = Button(mainView, text="블랙리스트 설정", command=setBlackList)
 combineBtn = Button(mainView, text="송장번호 넣기", command=combineExcel)
+makeBtn = Button(mainView, text="주문합치기", command=makeExcel)
 # getBlackList = Button(mainView, text="블랙리스트 뽑기", command=getBlackList)
 # setBlackList.place(x=190, y=120)
 combineBtn.place(x=295, y=120)
+makeBtn.place(x=395, y=120)
 # getBlackList.place(x=390, y=120)
 
 
