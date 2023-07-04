@@ -66,15 +66,15 @@ class ExcelManager :
         # 수하인명 and 수하인주소 and (수하인전화번호1 or 수하인전화번호2)
         for i in range(len(invoiceDf)):
             # 조건에 맞는 행 인덱스 찾음
-            name = invoiceDf.loc[i, '수하인명']
-            address = invoiceDf.loc[i, '수하인주소']
-            phone1 = invoiceDf.loc[i, '수하인 전화번호 1']
-            phone2 = invoiceDf.loc[i, '수하인 전화번호 2']
+            name = invoiceDf.loc[i, COLUMN_VALUES['NAME']]
+            address = invoiceDf.loc[i, COLUMN_VALUES['ADDRESS']]
+            phone1 = invoiceDf.loc[i, COLUMN_VALUES['PHONE1']]
+            phone2 = invoiceDf.loc[i, COLUMN_VALUES['PHONE2']]
 
-            nameBSr = orderDf['수하인명'] == invoiceDf.loc[i, '수하인명']
-            addressBSr = orderDf['수하인주소'] == invoiceDf.loc[i, '수하인주소']
-            phone1BSr = orderDf['수하인 전화번호 1'] == invoiceDf.loc[i, '수하인 전화번호 1']
-            phone2BSr = orderDf['수하인 전화번호 2'] == invoiceDf.loc[i, '수하인 전화번호 2']
+            nameBSr = orderDf[COLUMN_VALUES['NAME']] == invoiceDf.loc[i, COLUMN_VALUES['NAME']]
+            addressBSr = orderDf[COLUMN_VALUES['ADDRESS']] == invoiceDf.loc[i, COLUMN_VALUES['ADDRESS']]
+            phone1BSr = orderDf[COLUMN_VALUES['PHONE1']] == invoiceDf.loc[i, COLUMN_VALUES['PHONE1']]
+            phone2BSr = orderDf[COLUMN_VALUES['PHONE2']] == invoiceDf.loc[i, COLUMN_VALUES['PHONE2']]
 
             idx = None
             errorMsg = ''
@@ -90,16 +90,16 @@ class ExcelManager :
                 Log.writeLog('송장 %d번 행 "%s,%s,%s,%s"'%(i, name,address,phone1,phone2), __file__)
                 for j in idx:
                     Log.writeLog('발주서 %d번 행 "%s,%s,%s,%s"'%(
-                        j, invoiceDf.loc[i, '수하인명'], invoiceDf.loc[i, '수하인주소'],
-                        invoiceDf.loc[i, '수하인 전화번호 1'], invoiceDf.loc[i, '수하인 전화번호 2']), __file__)
+                        j, invoiceDf.loc[i, COLUMN_VALUES['수하인명']], invoiceDf.loc[i, COLUMN_VALUES['ADDRESS']],
+                        invoiceDf.loc[i, COLUMN_VALUES['PHONE1']], invoiceDf.loc[i, COLUMN_VALUES['PHONE2']]), __file__)
 
                 continue
             
 
-            if '송장번호' not in orderDf.columns.values.tolist():
-                orderDf['송장번호'] = pd.Series()
+            if COLUMN_VALUES['INVOICE_NUM'] not in orderDf.columns.values.tolist():
+                orderDf[COLUMN_VALUES['INVOICE_NUM']] = pd.Series()
             # 송장 추가
-            orderDf.loc[idx[0], '송장번호'] = invoiceDf.loc[i, '송장번호']
+            orderDf.loc[idx[0], COLUMN_VALUES['INVOICE_NUM']] = invoiceDf.loc[i, COLUMN_VALUES['INVOICE_NUM']]
 
         self.createNewExcelFile(orderDf, 'combindedExcel')
 
@@ -147,9 +147,9 @@ class ExcelManager :
 
                     # 주문번호 최소값으로 찾음
                     if orderNum == '':
-                        orderNum = orderDf.loc[j, '주문번호']
+                        orderNum = orderDf.loc[j, COLUMN_VALUES['INVOICE_NUM']]
                     else:
-                        orderNum = min(int(orderDf.loc[j, '주문번호']), int(orderNum))
+                        orderNum = min(int(orderDf.loc[j, COLUMN_VALUES['INVOICE_NUM']]), int(orderNum))
             
                 doneIndex += idx
 
