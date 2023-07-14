@@ -25,11 +25,14 @@ class ExcelManager :
         if not self.checkExtension(fileName):
             Log.writeLog('읽으려하는 파일의 확장자가 잘못되었습니다. fileName = %s'%fileName, __file__)
             return None
+        df = pd.read_excel(fileName,
+                      header=0,
+                      sheet_name=sheetName,
+                      engine='openpyxl').fillna('-')
+            
+        df.columns = list(COLUMN_VALUES.values())
         
-        return pd.read_excel(fileName, 
-                             header=0,
-                             sheet_name=sheetName,
-                             engine='openpyxl').fillna('-')
+        return df
         
     # -
 
@@ -150,7 +153,7 @@ class ExcelManager :
                         orderNum = orderDf.loc[j, COLUMN_VALUES['INVOICE_NUM']]
                     else:
                         orderNum = min(int(orderDf.loc[j, COLUMN_VALUES['INVOICE_NUM']]), int(orderNum))
-            
+                newRowDict[COLUMN_VALUES['INVOICE_NUM']] = orderNum
                 doneIndex += idx
 
                 newDF = pd.concat([newDF, pd.DataFrame(newRowDict)]).reset_index(drop=True)
