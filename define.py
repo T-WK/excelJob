@@ -27,6 +27,7 @@ COLUMN_VALUES = {
     'DELIVERY_COST':'택배운임',
     'DELIVERY_TYPE':'운임구분',
     'ITEM':'품목명',
+    'OPTION':'옵션명',
     'OPTION1':'추가옵션 1',
     'OPTION2':'추가옵션 2',
     'DELIVERY_MSG':'배송메세지',
