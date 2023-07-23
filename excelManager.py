@@ -173,6 +173,7 @@ class ExcelManager :
             dic[COLUMN_VALUES['PHONE2']] = [str(df[COLUMN_VALUES['PHONE2']])]
             dic[COLUMN_VALUES['COUNT']] = ['1']
             dic[COLUMN_VALUES['ITEM']] = [str(df[COLUMN_VALUES['ITEM']])]
+            dic[COLUMN_VALUES['OPTION']] = [str(df[COLUMN_VALUES['OPTION']])]
             dic[COLUMN_VALUES['OPTION1']] = [str(df[COLUMN_VALUES['OPTION1']])]
             dic[COLUMN_VALUES['OPTION2']] = [str(df[COLUMN_VALUES['OPTION2']])]
             dic[COLUMN_VALUES['DELIVERY_MSG']] = [str(df[COLUMN_VALUES['DELIVERY_MSG']])]
@@ -181,6 +182,7 @@ class ExcelManager :
         
         else:
             dic[COLUMN_VALUES['ITEM']][0] += '\n' + str(df[COLUMN_VALUES['ITEM']])
+            dic[COLUMN_VALUES['OPTION']] = [str(df[COLUMN_VALUES['OPTION']])]
             dic[COLUMN_VALUES['OPTION1']][0] += '\n' + str(df[COLUMN_VALUES['OPTION1']])
             dic[COLUMN_VALUES['OPTION2']][0] += '\n' + str(df[COLUMN_VALUES['OPTION2']])
             
