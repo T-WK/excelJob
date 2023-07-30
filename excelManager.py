@@ -149,11 +149,11 @@ class ExcelManager :
 
 
                     # 주문번호 최소값으로 찾음
-                    if orderNum == '':
-                        orderNum = orderDf.loc[j, COLUMN_VALUES['INVOICE_NUM']]
-                    else:
-                        orderNum = min(int(orderDf.loc[j, COLUMN_VALUES['INVOICE_NUM']]), int(orderNum))
-                newRowDict[COLUMN_VALUES['INVOICE_NUM']] = orderNum
+                    # if orderNum == '':
+                    #     orderNum = orderDf.loc[j, COLUMN_VALUES['INVOICE_NUM']]
+                    # else:
+                    #     orderNum = min(int(orderDf.loc[j, COLUMN_VALUES['INVOICE_NUM']]), int(orderNum))
+            
                 doneIndex += idx
 
                 newDF = pd.concat([newDF, pd.DataFrame(newRowDict)]).reset_index(drop=True)
@@ -176,6 +176,7 @@ class ExcelManager :
             dic[COLUMN_VALUES['PHONE2']] = [str(df[COLUMN_VALUES['PHONE2']])]
             dic[COLUMN_VALUES['COUNT']] = ['1']
             dic[COLUMN_VALUES['ITEM']] = [str(df[COLUMN_VALUES['ITEM']])]
+            dic[COLUMN_VALUES['OPTION']] = [str(df[COLUMN_VALUES['OPTION']])]
             dic[COLUMN_VALUES['OPTION1']] = [str(df[COLUMN_VALUES['OPTION1']])]
             dic[COLUMN_VALUES['OPTION2']] = [str(df[COLUMN_VALUES['OPTION2']])]
             dic[COLUMN_VALUES['DELIVERY_MSG']] = [str(df[COLUMN_VALUES['DELIVERY_MSG']])]
@@ -184,10 +185,19 @@ class ExcelManager :
         
         else:
             dic[COLUMN_VALUES['ITEM']][0] += '\n' + str(df[COLUMN_VALUES['ITEM']])
+            dic[COLUMN_VALUES['OPTION']] = [str(df[COLUMN_VALUES['OPTION']])]
             dic[COLUMN_VALUES['OPTION1']][0] += '\n' + str(df[COLUMN_VALUES['OPTION1']])
             dic[COLUMN_VALUES['OPTION2']][0] += '\n' + str(df[COLUMN_VALUES['OPTION2']])
             
-            dic[COLUMN_VALUES['ORDER_NUM']] = [str(min(int(dic[COLUMN_VALUES['ORDER_NUM']][0]), int(df[COLUMN_VALUES['ORDER_NUM']])))]
+            # dic[COLUMN_VALUES['ORDER_NUM']] = [str(min(int(dic[COLUMN_VALUES['ORDER_NUM']][0]), int(df[COLUMN_VALUES['ORDER_NUM']])))]
+            if str(dic[COLUMN_VALUES['ORDER_NUM']][0]).isdigit() and str(df[COLUMN_VALUES['ORDER_NUM']]).isdigit():
+                dic[COLUMN_VALUES['ORDER_NUM']] = [str(min(int(dic[COLUMN_VALUES['ORDER_NUM']][0]), int(df[COLUMN_VALUES['ORDER_NUM']])))]
+            
+            elif not str(dic[COLUMN_VALUES['ORDER_NUM']][0]).isdigit() and str(df[COLUMN_VALUES['ORDER_NUM']]).isdigit():
+                dic[COLUMN_VALUES['ORDER_NUM']] = [df[COLUMN_VALUES['ORDER_NUM']]]
+            
+            elif str(dic[COLUMN_VALUES['ORDER_NUM']][0]).isdigit() and not str(df[COLUMN_VALUES['ORDER_NUM']]).isdigit():
+                dic[COLUMN_VALUES['ORDER_NUM']] = [dic[COLUMN_VALUES['ORDER_NUM']][0]]
 
         return dic
 
